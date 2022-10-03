@@ -3,6 +3,7 @@ from experiment import Experiment
 from river.tree import HoeffdingAdaptiveTreeClassifier, HoeffdingTreeClassifier
 from river.ensemble import AdaptiveRandomForestClassifier
 from river.datasets import synth
+from generators.imbGenerator import BinaryImbalancedDataset, MultiClassImbalancedDataset
 
 # ideal would be something like
 # evaluator = Evaluator (window_size = 500, metrics = X)
@@ -13,7 +14,16 @@ from river.datasets import synth
 
 
 def main():
-    exp = Experiment(number_of_processes=1, output_folder=".")
+    generator = MultiClassImbalancedDataset(
+        synth.RandomRBF(n_classes=4), [0.1, 0.2, 0.2, 0.5]
+    )
+    counter = [0, 0, 0, 0]
+    for x, y in generator.take(10000):
+
+        counter[y] += 1
+
+    print(counter)
+    """exp = Experiment(number_of_processes=1, output_folder=".")
     exp.add(
         HoeffdingTreeClassifier(),
         synth.LED().take(10000),
@@ -32,7 +42,7 @@ def main():
         exp_name="ARF-aggraval",
         evaluator=Evaluator(),
     )
-    exp.run()
+    exp.run()"""
 
 
 if __name__ == "__main__":
