@@ -1,5 +1,6 @@
 from typing import Dict
 from river import metrics
+from utils.metrics import TimeConsumption
 
 
 class Evaluator:
@@ -12,6 +13,7 @@ class Evaluator:
             "kappa": metrics.CohenKappa,
             "gmean": metrics.GeometricMean,
             "cm": metrics.ConfusionMatrix,
+            "trainingTime": TimeConsumption,
         }
 
         if metric_list is None:
@@ -45,7 +47,11 @@ class Evaluator:
         return self.windowSize
 
     def reset(self):
+        aux = self.windowMetrics[4]
         self.windowMetrics = []
         for m in self.metric_list:
-            metric_function = self.metrics.get(m)
-            self.windowMetrics.append([m, metric_function()])
+            if m != "trainingTime":
+                metric_function = self.metrics.get(m)
+                self.windowMetrics.append([m, metric_function()])
+
+        self.windowMetrics.append(aux)

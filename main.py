@@ -14,16 +14,8 @@ from generators.imbGenerator import BinaryImbalancedDataset, MultiClassImbalance
 
 
 def main():
-    generator = MultiClassImbalancedDataset(
-        synth.RandomRBF(n_classes=4), [0.1, 0.2, 0.2, 0.5]
-    )
-    counter = [0, 0, 0, 0]
-    for x, y in generator.take(10000):
 
-        counter[y] += 1
-
-    print(counter)
-    """exp = Experiment(number_of_processes=1, output_folder=".")
+    exp = Experiment(number_of_processes=1, output_folder=".")
     exp.add(
         HoeffdingTreeClassifier(),
         synth.LED().take(10000),
@@ -42,7 +34,7 @@ def main():
         exp_name="ARF-aggraval",
         evaluator=Evaluator(),
     )
-    exp.run()"""
+    exp.run()
 
 
 if __name__ == "__main__":
